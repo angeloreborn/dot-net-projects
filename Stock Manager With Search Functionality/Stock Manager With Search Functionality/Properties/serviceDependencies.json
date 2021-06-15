@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "mssql1": {
-      "type": "mssql",
-      "connectionId": "ConnectionStrings:Stock_Manager_With_Search_FunctionalityContext"
-    }
-  }
-}
