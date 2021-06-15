@@ -5,7 +5,9 @@ This project includes data management for stock. There are `3 entites` explored 
 - Stock
 
 `Supplier` is modelled towards general information.
+
 `Product` is modelled towards product details
+
 `Stock` is modelled towards tracking product quantity
 
 # Areas Covered
