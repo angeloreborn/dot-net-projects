@@ -1,0 +1,38 @@
+﻿@model List<Stock_Manager_With_Search_Functionality.ViewModels.StockManage>
+
+@{
+    ViewData["Title"] = "Manage";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Catagory</th>
+            <th>Price</th>
+            <th>Supplier</th>
+            <th>Quantity</th>
+            <th>DateUpdated</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var stockManage in Model)
+        {
+        <tr>
+            <td>@stockManage.ProductName</td>
+            <td>@stockManage.ProductCatagory</td>
+            <td>@stockManage.ProductPrice</td>
+            <td>@stockManage.SupplierID</td>
+            <td>@stockManage.StockQuantity</td>
+            <td>@stockManage.DateUpdated</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@stockManage.StockID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@stockManage.StockID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@stockManage.StockID">Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
