@@ -1,0 +1,120 @@
+﻿@model Stock_Manager_With_Search_Functionality.Models.Stock
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Stock</h4>
+<hr />
+
+        <form asp-action="Create" method="get">
+            <div class="form-actions">
+                <p>
+                    <h5>Search for product:</h5>
+                    <div class="d-flex">
+                        <input class="form-control mr-3" type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+                        <input type="submit" value="Search" class="btn btn-outline-primary mr-3" />
+                    </div>
+
+                </p>
+            </div>
+        </form>
+
+
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @if (ViewBag.productResults == null)
+            {
+                <h3>Search for products</h3>
+            }
+            else
+            {
+                <h3>Results</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Catagory</th>
+                            <th>Supplier</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (Product product in ViewBag.productResults)
+                        {
+                            <tr>
+                                <td>@product.Name</td>
+                                <td>@product.Price</td>
+                                <td>@product.Category</td>
+                                <td>@product.Supplier</td>
+                                @{
+
+                                }
+                                <td><button type="button" id='btn-@product.Id' onclick="selectProduct('@Newtonsoft.Json.JsonConvert.SerializeObject(product)')" class="btn btn-group">Select</button></td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+            <br />
+
+            <div class="form-group">
+                <label asp-for="ProductID" class="control-label"></label>
+                <input readonly asp-for="ProductID" id="productID" class="form-control" />
+                <span asp-validation-for="ProductID" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <button onclick="clearSelectedProduct()" type="button" class="btn btn-danger">Clear Selection</button>
+            </div>
+        </form>
+ 
+
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        var selectedProduct;
+        function selectProduct(_product) {
+            if (!_product) return;
+            clearSelectedProduct();
+            let product = JSON.parse(_product);
+            let selectBtn = document.getElementById(`btn-${product.Id}`);
+            selectBtn.innerHTML = 'Selected';
+            selectBtn.className = 'btn btn-success'
+            let productID = document.getElementById('productID');
+            productID.value = product.Id;
+            selectedProduct = selectBtn;
+           
+            
+        }
+
+        function clearSelectedProduct() {
+            let productID = document.getElementById('productID')
+            productID.value = '';
+            if (selectedProduct) {
+                selectedProduct.className = 'btn btn-group'
+                selectedProduct.innerHTML = 'Select'
+            }
+        }
+</script>
+}
+
+
