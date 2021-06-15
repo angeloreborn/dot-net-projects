@@ -1,8 +1,8 @@
 ﻿# Project Description
-This project includes data management for stock. There are 3 entites explored here:
-    - Supplier
-    - Product
-    - Stock
+This project includes data management for stock. There are `3 entites` explored here:
+- Supplier
+- Product
+- Stock
 
 `Supplier` is modelled towards general information.
 `Product` is modelled towards product details
@@ -14,8 +14,8 @@ This project includes data management for stock. There are 3 entites explored he
 - Service Injection
 
 ## Detailed Focus
-- Data Caching
 - Pagination
+- Data Caching
 - Data Seeding
 - Data Sorting (Server & Client)
 - Data Filtering
