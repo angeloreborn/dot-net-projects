@@ -1,0 +1,1 @@
+﻿# Stock Manager Readme 
