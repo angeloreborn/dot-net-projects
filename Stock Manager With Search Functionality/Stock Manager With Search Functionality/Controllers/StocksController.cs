@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Stock_Manager_With_Search_Functionality.Data;
 using Stock_Manager_With_Search_Functionality.Models;
 using Stock_Manager_With_Search_Functionality.Services;
@@ -26,41 +25,37 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
         }
 
         // GET: Stocks Suppliers Products
-        public async Task<dynamic> Index(bool onlyExport = false)
+        public async Task<IActionResult> Index()
         {
-            List<StockManage> stockManageList = await _context.Stock.Join(
-                    _context.Product,
-                    product => product.ProductID,
-                    stock => stock.Id,
-                    (stock, product) => new StockManage
-                    {
-                        ProductCatagory = product.Category,
-                        ProductID = product.Id,
-                        ProductName = product.Name,
-                        ProductPrice = product.Price,
-                        SupplierID = product.Supplier,
-                        StockID = stock.Id,
-                        StockQuantity = stock.Quantity,
-                        DateUpdated = stock.DateUpdated,
-                    }
-                ).ToListAsync();
-
-            if (onlyExport == true)
-            {
-                return stockManageList;
-            }
-               
-
+            List<StockManage> stockManageList = await GetAllStock();
             IEnumerable<Supplier> suppliers = await _cacheService.SupplierCache(CacheServiceOptionPreset.Default);
+
             ViewBag.supplierList = suppliers;
 
             return View(stockManageList);
         }
 
-        private bool Hello()
+        public async Task<List<StockManage>> GetAllStock()
         {
-            return true;
+            List<StockManage> stockManageList = await _context.Stock.Join(
+            _context.Product,
+            product => product.ProductID,
+            stock => stock.Id,
+            (stock, product) => new StockManage
+            {
+                ProductCatagory = product.Category,
+                ProductID = product.Id,
+                ProductName = product.Name,
+                ProductPrice = product.Price,
+                SupplierID = product.Supplier,
+                StockID = stock.Id,
+                StockQuantity = stock.Quantity,
+                DateUpdated = stock.DateUpdated,
+            }
+         ).ToListAsync();
+            return stockManageList;
         }
+
         [HttpPost]
         public async Task<IActionResult> Export()
         {
@@ -69,22 +64,22 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
             // the data shown in view should be the data exported as csv
             // https://www.aspforums.net/Threads/204925/Export-HTML-Table-to-CSV-file-in-ASPNet-Core-MVC/
 
-            List<StockManage> stocks = await Index(true);
+            List<StockManage> stocks = await GetAllStock();
             StringBuilder stringBuilder = new();
             PropertyInfo[] propInfos = new StockManage().GetType().GetProperties();
 
-            foreach(PropertyInfo propInfo in propInfos)
+            foreach (PropertyInfo propInfo in propInfos)
             {
                 stringBuilder.Append($"{propInfo.Name},");
             }
 
             stringBuilder.AppendLine();
-            
+
             for (int i = 0; i < stocks.Count; i++)
             {
                 StockManage stock = stocks[i];
 
-                foreach(PropertyInfo prop in stock.GetType().GetProperties())
+                foreach (PropertyInfo prop in stock.GetType().GetProperties())
                 {
                     stringBuilder.Append($"{prop.GetValue(stock)},");
                 }
@@ -116,7 +111,7 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
         public IActionResult Create(string searchString)
         {
             ViewData["CurrentFilter"] = searchString;
-           
+
             // Generic Search properties
             // Richer search tools structured by property and type
 
@@ -130,11 +125,11 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
             {
                 IEnumerable<Product> products = _context.Product;
                 products = products.Where(s => s.Name.Contains(searchString)
-                                        || s.Category.Contains(searchString));            
+                                        || s.Category.Contains(searchString));
                 ViewBag.productResults = products;
             }
 
-           
+
 
             return View();
         }
