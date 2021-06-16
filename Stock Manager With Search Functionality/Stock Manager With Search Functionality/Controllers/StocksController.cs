@@ -43,7 +43,7 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
                     }
                 ).ToListAsync();
 
-            IEnumerable<Supplier> suppliers = await _cacheService.CacheTryGetValueSet(CacheKeys.Suppliers);
+            IEnumerable<Supplier> suppliers = await _cacheService.SupplierCache(CacheServiceOptionPreset.Default);
             ViewBag.supplierList = suppliers;
 
             return View(stockManageList);

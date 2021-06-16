@@ -26,7 +26,7 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
         // GET: Suppliers
         public async Task<IActionResult> Index()
         {
-            IEnumerable<Supplier> suppliers = await _cacheService.CacheTryGetValueSet(CacheKeys.Suppliers);
+            IEnumerable<Supplier> suppliers = await _cacheService.SupplierCache(CacheServiceOptionPreset.Default);
             return View(suppliers);
         }
 

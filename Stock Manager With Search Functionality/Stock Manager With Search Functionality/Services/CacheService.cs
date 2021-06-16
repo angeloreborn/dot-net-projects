@@ -23,24 +23,42 @@ namespace Stock_Manager_With_Search_Functionality.Services
             _context = context;
             _cache = memoryCache;
         }
-        public async Task<IEnumerable<Supplier>> CacheTryGetValueSet(string cacheKey)
+
+        public class CacheServiceOptions{
+            public TimeSpan Expiration { get; set; }
+        }
+
+        public static class CacheServiceOptionPreset
         {
-
-            if (!_cache.TryGetValue(cacheKey, out IEnumerable<Supplier> suppliers))
+            public static CacheServiceOptions Default
             {
-                Console.WriteLine("Cache not set, fetching -> setting");
-                suppliers = await _context.Supplier.ToListAsync();
+                get
+                {
+                    return new CacheServiceOptions
+                    {
+                        Expiration = TimeSpan.FromDays(1)
+                    };
+                }
+            }
+        }
+
+        public async Task<IEnumerable<Supplier>> SupplierCache(CacheServiceOptions cacheServiceOptions)
+        {
+            return (IEnumerable<Supplier>) await GetCache(CacheKeys.Suppliers, cacheServiceOptions);
+        }
+
+        public async Task<IEnumerable<object>> GetCache(string cacheKey, CacheServiceOptions cacheServiceOptions)
+        {
+            if (!_cache.TryGetValue(cacheKey, out IEnumerable<object> objects))
+            {
+                objects = await _context.Supplier.ToListAsync();
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromDays(1));
+                    .SetSlidingExpiration(cacheServiceOptions.Expiration);
 
-                _cache.Set(CacheKeys.Suppliers, suppliers, cacheEntryOptions);
-            }
-            else
-            {
-                Console.WriteLine("Cache was available");
+                _cache.Set(CacheKeys.Suppliers, objects, cacheEntryOptions);
             }
 
-            return suppliers;
+            return objects;
         }
     }
 }
