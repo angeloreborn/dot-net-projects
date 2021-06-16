@@ -25,21 +25,37 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
         }
 
         // GET: Stocks Suppliers Products
-        public async Task<IActionResult> Index(string SearchString, string supplier)
+        public async Task<IActionResult> Index(string name, string supplier, string beforeDate, string afterDate, string dateSelection)
         {
             
-            IEnumerable<StockManage> stockManageList = await GetAllStock(SearchString, supplier);
-            IEnumerable<Supplier> suppliers = await _cacheService.SupplierCache(CacheServiceOptionPreset.Default);
+            IEnumerable<StockManage> stockManageList = await GetAllStock(name, supplier, beforeDate, afterDate, dateSelection);
 
+            IEnumerable<Supplier> suppliers = await _cacheService.SupplierCache(CacheServiceOptionPreset.Default);
             ViewBag.supplierList = suppliers;
+
+            SortedDictionary<string, int> stockCatagoryDistionary = new();
+            foreach(StockManage stockItem in stockManageList)
+            {
+                if (!stockCatagoryDistionary.ContainsKey(stockItem.ProductCatagory))
+                {
+                    stockCatagoryDistionary.Add(stockItem.ProductCatagory, stockItem.ProductID);
+                }
+            }
+            ViewBag.catagoryList = stockCatagoryDistionary;
+            
 
             return View(stockManageList);
         }
 
-        public async Task<IEnumerable<StockManage>> GetAllStock(string searchString, string supplier)
+        public async Task<IEnumerable<StockManage>> GetAllStock(string name, string supplier, string beforeDate, string afterDate, string dateSelection)
         {
-            ViewData["CurrentFilter"] = searchString;
+            ViewData["NameFilter"] = name;
             ViewData["SupplierFilter"] = supplier;
+            ViewData["BeforeDateFilter"] = beforeDate;
+            ViewData["AfterDateFilter"] = afterDate;
+            ViewData["DateSelection"] = dateSelection;
+
+            Console.WriteLine(beforeDate);
 
             IEnumerable<StockManage> stockManageList = await _context.Stock.Join(
             _context.Product,
@@ -58,9 +74,9 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
             }
          ).ToArrayAsync();
 
-            if (!String.IsNullOrEmpty(searchString))
+            if (!String.IsNullOrEmpty(name))
             {
-                stockManageList = stockManageList.Where(s => s.ProductName.Contains(searchString));
+                stockManageList = stockManageList.Where(s => s.ProductName.Contains(name));
             }
 
             if (!String.IsNullOrEmpty(supplier))
@@ -73,22 +89,39 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
                 
             }
 
-
+            if (!String.IsNullOrEmpty(beforeDate) && !String.IsNullOrEmpty(afterDate))
+            {
+                stockManageList = stockManageList.Where(s => s.DateUpdated > Convert.ToDateTime(afterDate) &&
+                                                             s.DateUpdated < Convert.ToDateTime(beforeDate));
+            }
+            else
+            if (!String.IsNullOrEmpty(beforeDate))
+            {
+                Console.WriteLine(Convert.ToDateTime(beforeDate));
+                stockManageList = stockManageList.Where(s => s.DateUpdated < Convert.ToDateTime(beforeDate));
+            }
+            else
+            if (!String.IsNullOrEmpty(afterDate))
+            {
+                stockManageList = stockManageList.Where(s => s.DateUpdated > Convert.ToDateTime(afterDate));
+            }
 
             return stockManageList;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Export(string searchString, string supplier)
+        public async Task<IActionResult> Export(string name, string supplier, string beforeDate, string afterDate, string dateSelection)
         {
             // Tutorial demonstrates clear way to export files to client.
             // However exports are determinstic on search params,
             // the data shown in view should be the data exported as csv
             // https://www.aspforums.net/Threads/204925/Export-HTML-Table-to-CSV-file-in-ASPNet-Core-MVC/
-            ViewData["CurrentFilter"] = searchString;
+            ViewData["NameFilter"] = name;
             ViewData["SupplierFilter"] = supplier;
+            ViewData["BeforeDateFilter"] = beforeDate;
+            ViewData["AfterDateFilter"] = afterDate;
 
-            IEnumerable<StockManage> stocks = await GetAllStock(searchString, supplier);
+            IEnumerable<StockManage> stocks = await GetAllStock(name, supplier, beforeDate, afterDate, dateSelection);
             StringBuilder stringBuilder = new();
             PropertyInfo[] propInfos = new StockManage().GetType().GetProperties();
 

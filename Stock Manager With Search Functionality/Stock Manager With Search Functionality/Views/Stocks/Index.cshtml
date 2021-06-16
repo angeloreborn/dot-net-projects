@@ -11,14 +11,28 @@
 </p>
 
 <form asp-action="Index" method="get">
-    <div class="form-actions no-color">
-        <p>
-            Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
-
-            By Supplier:
-            <select name="supplier">
+    <div class="row">
+        <div class="col">
+            <label>Find by name:</label>
+            <input placeholder="Product Name" class="form-control" type="text" name="name" value="@ViewData["NameFilter"]" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label>By Catagory:</label>
+            <select class="form-control">
+                <option value="">Any</option>
+                @foreach (KeyValuePair<string, int> catagory in ViewBag.catagoryList)
+                {
+                    <option value="@catagory.Value">@catagory.Key</option>
+                }
+            </select>
+        </div>
+        <div class="col">
+            <label>By Supplier:</label>
+            <select class="form-control" name="supplier">
                 @{
-                    <option value="">None</option>
+                    <option value="">Any</option>
 
                     foreach (var supplier in ViewBag.supplierList)
                     {
@@ -42,10 +56,76 @@
                     }
                 }
             </select>
+        </div>
 
-            <input type="submit" value="Search" class="btn btn-default" /> |
-            <a asp-action="Index">Back to Full List</a>
-        </p>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label>By Date</label>
+            <select id="dateSelectOption" name="dateSelection" class="form-control">
+                @if (ViewData["DateSelection"] != null)
+                {
+                    string dateSelectionOption = ViewData["DateSelection"].ToString();
+
+                    if (dateSelectionOption == "")
+                    {
+                        <option selected value="">Any</option>
+                    }
+                    else
+                    {
+                        <option value="">Any</option>
+                    }
+
+                    if (dateSelectionOption == "before")
+                    {
+                        <option selected value="before">Before Date</option>
+                    }
+                    else
+                    {
+                        <option value="before">Before Date</option>
+                    }
+
+                    if (dateSelectionOption == "after")
+                    {
+                        <option selected value="after">After Date</option>
+                    }
+                    else
+                    {
+                        <option value="after">After Date</option>
+                    }
+
+                    if (dateSelectionOption == "between")
+                    {
+                        <option selected value="between">Between Date</option>
+                    }
+                    else
+                    {
+                        <option value="between">Between Date</option>
+                    }
+                }
+                else
+                {
+                    <option selected value="">Any</option>
+                    <option value="before">Before Date</option>
+                    <option value="after">After Date</option>
+                    <option value="between">Between Date</option>
+                }
+
+
+            </select>
+            <div id="dateSelection" class="row">
+                <div class="col">
+                    After:<input name="afterDate" value="@ViewData["AfterDateFilter"]" disabled id="afterDate" class="form-control" type="date" />
+                </div>
+                <div class="col">
+                    Before:<input name="beforeDate" value="@ViewData["BeforeDateFilter"]" disabled id="beforeDate" class="form-control" type="date" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="input-group">
+        <input type="submit" value="Search" class="btn btn-primary" />
     </div>
 </form>
 
@@ -82,8 +162,60 @@
     </tbody>
 </table>
 <form asp-action="Export" asp-controller="Stocks" method="post">
-    <input hidden type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+    <input hidden type="text" name="name" value="@ViewData["NameFilter"]" />
+    <input hidden type="text" name="beforeDate" value="@ViewData["BeforeDateFilter"]" />
+    <input hidden type="text" name="afterDate" value="@ViewData["AfterDateFilter"]" />
     <button class="btn btn-info">Export .csv</button>
 </form>
+
+@section scripts{
+    <script>
+        let dateSelection = document.getElementById('dateSelection');
+        let dateInputs = dateSelection.querySelectorAll('input');
+        dateInputs.forEach((dateInput) => {
+            dateInput.addEventListener('change', (inputChangeEvent) => {
+                // let _dateInputs = dateSelection.querySelectorAll('input'); -> Compare
+                let _dateSelectOptionValue = document.getElementById('dateSelectOption').value;
+                switch (_dateSelectOptionValue) {
+                    case 'between': {
+                        // After must be before Before as DateTime.
+                    } break
+                }
+            })
+        })
+
+        updateDateInputs();
+
+        let dateSelectOption = document.getElementById('dateSelectOption');
+        dateSelectOption.addEventListener('change', updateDateInputs);
+
+        function updateDateInputs() {
+            let dateSelectOptionValue = document.getElementById('dateSelectOption').value;
+            switch (dateSelectOptionValue) {
+                case 'after': {
+                    dateInputs[0].disabled = false
+                    dateInputs[1].disabled = true
+                } break;
+                case 'before': {
+                    dateInputs[0].disabled = true
+                    dateInputs[1].disabled = false
+                } break
+                case 'between': {
+                    dateInputs[0].disabled = false
+                    dateInputs[1].disabled = false
+                } break
+                default: {
+                    dateInputs[0].disabled = true
+                    dateInputs[1].disabled = true
+                } break
+            }
+        }
+
+    </script>
+}
+
+
+
+
 
 
