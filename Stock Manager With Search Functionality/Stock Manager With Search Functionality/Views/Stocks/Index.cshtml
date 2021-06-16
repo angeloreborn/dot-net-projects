@@ -14,6 +14,35 @@
     <div class="form-actions no-color">
         <p>
             Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+
+            By Supplier:
+            <select name="supplier">
+                @{
+                    <option value="">None</option>
+
+                    foreach (var supplier in ViewBag.supplierList)
+                    {
+                        if (ViewData["SupplierFilter"] == null)
+                        {
+                            <option value="@supplier.Id">@supplier.Name</option>
+                        }
+                        else
+                        {
+                            var selected = ViewData["SupplierFilter"].ToString() == Convert.ToString(supplier.Id) ? "selected" : null;
+
+                            if (selected == null)
+                            {
+                                <option value="@supplier.Id">@supplier.Name</option>
+                            }
+                            else
+                            {
+                                <option selected value="@supplier.Id">@supplier.Name</option>
+                            }
+                        }
+                    }
+                }
+            </select>
+
             <input type="submit" value="Search" class="btn btn-default" /> |
             <a asp-action="Index">Back to Full List</a>
         </p>
@@ -36,19 +65,19 @@
     <tbody>
         @foreach (var stockManage in Model)
         {
-        <tr>
-            <td>@stockManage.ProductName</td>
-            <td>@stockManage.ProductCatagory</td>
-            <td>@stockManage.ProductPrice</td>
-            <td>@stockManage.SupplierID</td>
-            <td>@stockManage.StockQuantity</td>
-            <td>@stockManage.DateUpdated</td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@stockManage.StockID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@stockManage.StockID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@stockManage.StockID">Delete</a>
-            </td>
-        </tr>
+            <tr>
+                <td>@stockManage.ProductName</td>
+                <td>@stockManage.ProductCatagory</td>
+                <td>@stockManage.ProductPrice</td>
+                <td>@stockManage.SupplierID</td>
+                <td>@stockManage.StockQuantity</td>
+                <td>@stockManage.DateUpdated</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@stockManage.StockID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@stockManage.StockID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@stockManage.StockID">Delete</a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

@@ -25,10 +25,10 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
         }
 
         // GET: Stocks Suppliers Products
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string SearchString, string supplier)
         {
             
-            IEnumerable<StockManage> stockManageList = await GetAllStock(searchString);
+            IEnumerable<StockManage> stockManageList = await GetAllStock(SearchString, supplier);
             IEnumerable<Supplier> suppliers = await _cacheService.SupplierCache(CacheServiceOptionPreset.Default);
 
             ViewBag.supplierList = suppliers;
@@ -36,9 +36,10 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
             return View(stockManageList);
         }
 
-        public async Task<IEnumerable<StockManage>> GetAllStock(string searchString)
+        public async Task<IEnumerable<StockManage>> GetAllStock(string searchString, string supplier)
         {
             ViewData["CurrentFilter"] = searchString;
+            ViewData["SupplierFilter"] = supplier;
 
             IEnumerable<StockManage> stockManageList = await _context.Stock.Join(
             _context.Product,
@@ -62,19 +63,32 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
                 stockManageList = stockManageList.Where(s => s.ProductName.Contains(searchString));
             }
 
+            if (!String.IsNullOrEmpty(supplier))
+            {
+                int supplierID = -1;
+                if (int.TryParse(supplier, out supplierID))
+                {
+                    stockManageList = stockManageList.Where(s => s.SupplierID == Convert.ToInt32(supplierID));
+                }
+                
+            }
+
+
+
             return stockManageList;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Export(string searchString)
+        public async Task<IActionResult> Export(string searchString, string supplier)
         {
             // Tutorial demonstrates clear way to export files to client.
             // However exports are determinstic on search params,
             // the data shown in view should be the data exported as csv
             // https://www.aspforums.net/Threads/204925/Export-HTML-Table-to-CSV-file-in-ASPNet-Core-MVC/
             ViewData["CurrentFilter"] = searchString;
+            ViewData["SupplierFilter"] = supplier;
 
-            IEnumerable<StockManage> stocks = await GetAllStock(searchString);
+            IEnumerable<StockManage> stocks = await GetAllStock(searchString, supplier);
             StringBuilder stringBuilder = new();
             PropertyInfo[] propInfos = new StockManage().GetType().GetProperties();
 
