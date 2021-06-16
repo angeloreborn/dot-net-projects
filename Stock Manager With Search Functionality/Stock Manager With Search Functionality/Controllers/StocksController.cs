@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +50,38 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
 
             return View(stockManageList);
         }
+
+        [HttpPost]
+        public IActionResult Export()
+        {
+            // Tutorial demonstrates clear way to export files to client.
+            // However exports are determinstic on search params,
+            // the data shown in view should be the data exported as csv
+            // https://www.aspforums.net/Threads/204925/Export-HTML-Table-to-CSV-file-in-ASPNet-Core-MVC/
+            var stocks = _context.Stock.ToList();
+            StringBuilder stringBuilder = new StringBuilder();
+            PropertyInfo[] propInfos = new Stock().GetType().GetProperties();
+
+            foreach(PropertyInfo propInfo in propInfos)
+            {
+                stringBuilder.Append($"{propInfo.Name},");
+            }
+            stringBuilder.AppendLine();
+            
+            for (int i = 0; i < stocks.Count; i++)
+            {
+                Stock stock = stocks[i];
+
+                foreach(PropertyInfo prop in stock.GetType().GetProperties())
+                {
+                    stringBuilder.Append($"{prop.GetValue(stock)},");
+                }
+                stringBuilder.AppendLine();
+
+            }
+            return File(Encoding.UTF8.GetBytes(stringBuilder.ToString()), "text/csv", $"Stock ({DateTime.Now}).csv");
+        }
+
         // GET: Stocks/Details/5
         public async Task<IActionResult> Details(int? id)
         {

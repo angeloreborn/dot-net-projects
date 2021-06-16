@@ -10,8 +10,9 @@
     <a asp-action="Create">Create New Stock</a>
 </p>
 
-<div>
-    Search Name: <input />
+<div class="form-group">
+    <h5>Search Name: </h5>
+    <input class="form-control" />
 </div>
 
 
@@ -46,4 +47,8 @@
         }
     </tbody>
 </table>
+<form asp-action="Export" asp-controller="Stocks" method="post">
+    <button class="btn btn-info">Export .csv</button>
+</form>
+
 
