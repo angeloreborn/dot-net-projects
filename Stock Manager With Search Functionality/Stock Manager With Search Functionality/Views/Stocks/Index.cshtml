@@ -1,4 +1,4 @@
-﻿@model List<Stock_Manager_With_Search_Functionality.ViewModels.StockManage>
+﻿@model IEnumerable<Stock_Manager_With_Search_Functionality.ViewModels.StockManage>
 
 @{
     ViewData["Title"] = "Manage";
@@ -10,10 +10,15 @@
     <a asp-action="Create">Create New Stock</a>
 </p>
 
-<div class="form-group">
-    <h5>Search Name: </h5>
-    <input class="form-control" />
-</div>
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="Index">Back to Full List</a>
+        </p>
+    </div>
+</form>
 
 
 <table class="table">
@@ -48,6 +53,7 @@
     </tbody>
 </table>
 <form asp-action="Export" asp-controller="Stocks" method="post">
+    <input hidden type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
     <button class="btn btn-info">Export .csv</button>
 </form>
 
