@@ -26,7 +26,7 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
         }
 
         // GET: Stocks Suppliers Products
-        public async Task<IActionResult> Index()
+        public async Task<dynamic> Index(bool onlyExport = false)
         {
             List<StockManage> stockManageList = await _context.Stock.Join(
                     _context.Product,
@@ -45,32 +45,44 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
                     }
                 ).ToListAsync();
 
+            if (onlyExport == true)
+            {
+                return stockManageList;
+            }
+               
+
             IEnumerable<Supplier> suppliers = await _cacheService.SupplierCache(CacheServiceOptionPreset.Default);
             ViewBag.supplierList = suppliers;
 
             return View(stockManageList);
         }
 
+        private bool Hello()
+        {
+            return true;
+        }
         [HttpPost]
-        public IActionResult Export()
+        public async Task<IActionResult> Export()
         {
             // Tutorial demonstrates clear way to export files to client.
             // However exports are determinstic on search params,
             // the data shown in view should be the data exported as csv
             // https://www.aspforums.net/Threads/204925/Export-HTML-Table-to-CSV-file-in-ASPNet-Core-MVC/
-            var stocks = _context.Stock.ToList();
-            StringBuilder stringBuilder = new StringBuilder();
-            PropertyInfo[] propInfos = new Stock().GetType().GetProperties();
+
+            List<StockManage> stocks = await Index(true);
+            StringBuilder stringBuilder = new();
+            PropertyInfo[] propInfos = new StockManage().GetType().GetProperties();
 
             foreach(PropertyInfo propInfo in propInfos)
             {
                 stringBuilder.Append($"{propInfo.Name},");
             }
+
             stringBuilder.AppendLine();
             
             for (int i = 0; i < stocks.Count; i++)
             {
-                Stock stock = stocks[i];
+                StockManage stock = stocks[i];
 
                 foreach(PropertyInfo prop in stock.GetType().GetProperties())
                 {
