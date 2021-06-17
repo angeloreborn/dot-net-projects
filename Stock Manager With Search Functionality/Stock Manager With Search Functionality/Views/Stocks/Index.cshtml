@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Manage";
+    string currency = "R";
 }
 
 <h1>Stock</h1>
@@ -20,11 +21,28 @@
     <div class="row">
         <div class="col">
             <label>By Catagory:</label>
-            <select class="form-control">
+            <select class="form-control" name="catagory">
                 <option value="">Any</option>
                 @foreach (KeyValuePair<string, int> catagory in ViewBag.catagoryList)
                 {
-                    <option value="@catagory.Value">@catagory.Key</option>
+                    if (ViewData["CatagoryFilter"] == null)
+                     {
+                        <option value="@catagory.Key">@catagory.Key</option>
+                    }
+                    else
+                    {
+                        var selected = ViewData["CatagoryFilter"].ToString() == Convert.ToString(catagory.Key) ? "selected" : null;
+
+                        if (selected == null)
+                    {
+                         <option value="@catagory.Key">@catagory.Key</option>
+                    }
+                    else
+                    {
+                         <option selected value="@catagory.Key">@catagory.Key</option>
+                    }
+                    }
+
                 }
             </select>
         </div>
@@ -34,23 +52,23 @@
                 @{
                     <option value="">Any</option>
 
-                    foreach (var supplier in ViewBag.supplierList)
+                    foreach (KeyValuePair<int, string> supplier in ViewBag.supplierList)
                     {
                         if (ViewData["SupplierFilter"] == null)
                         {
-                            <option value="@supplier.Id">@supplier.Name</option>
+                            <option value="@supplier.Key">@supplier.Value</option>
                         }
                         else
                         {
-                            var selected = ViewData["SupplierFilter"].ToString() == Convert.ToString(supplier.Id) ? "selected" : null;
+                            var selected = ViewData["SupplierFilter"].ToString() == Convert.ToString(supplier.Key) ? "selected" : null;
 
                             if (selected == null)
                             {
-                                <option value="@supplier.Id">@supplier.Name</option>
+                                <option value="@supplier.Key">@supplier.Value</option>
                             }
                             else
                             {
-                                <option selected value="@supplier.Id">@supplier.Name</option>
+                                <option selected value="@supplier.Key">@supplier.Value</option>
                             }
                         }
                     }
@@ -62,6 +80,7 @@
     <div class="row">
         <div class="col">
             <label>By Date</label>
+
             <select id="dateSelectOption" name="dateSelection" class="form-control">
                 @if (ViewData["DateSelection"] != null)
                 {
@@ -135,7 +154,7 @@
         <tr>
             <th>Name</th>
             <th>Catagory</th>
-            <th>Price</th>
+            <th>Price (@currency)</th>
             <th>Supplier</th>
             <th>Quantity</th>
             <th>DateUpdated</th>
@@ -145,26 +164,33 @@
     <tbody>
         @foreach (var stockManage in Model)
         {
-            <tr>
-                <td>@stockManage.ProductName</td>
-                <td>@stockManage.ProductCatagory</td>
-                <td>@stockManage.ProductPrice</td>
-                <td>@stockManage.SupplierID</td>
-                <td>@stockManage.StockQuantity</td>
-                <td>@stockManage.DateUpdated</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@stockManage.StockID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@stockManage.StockID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@stockManage.StockID">Delete</a>
-                </td>
-            </tr>
+        <tr>
+            <td>@Html.ActionLink(stockManage.ProductName, "Details", "Products", new { id = stockManage.ProductID }, null)</td>
+            <td>@stockManage.ProductCatagory</td>
+            <td>@stockManage.ProductPrice</td>
+            <td>
+                @Html.ActionLink($"{ViewBag.supplierList[stockManage.SupplierID]}", "Details", "Suppliers", new { id = stockManage.SupplierID }, null)
+            </td>
+            <td>@stockManage.StockQuantity</td>
+            <td>@stockManage.DateUpdated</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@stockManage.StockID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@stockManage.StockID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@stockManage.StockID">Delete</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
 <form asp-action="Export" asp-controller="Stocks" method="post">
     <input hidden type="text" name="name" value="@ViewData["NameFilter"]" />
+
+    <input hidden type="text" name="catagory" value="@ViewData["CatagoryFilter"]" />
+    <input hidden type="text" name="supplier" value="@ViewData["SupplierFilter"]" />
+
     <input hidden type="text" name="beforeDate" value="@ViewData["BeforeDateFilter"]" />
     <input hidden type="text" name="afterDate" value="@ViewData["AfterDateFilter"]" />
+
     <button class="btn btn-info">Export .csv</button>
 </form>
 

@@ -25,35 +25,35 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
         }
 
         // GET: Stocks Suppliers Products
-        public async Task<IActionResult> Index(string name, string supplier, string beforeDate, string afterDate, string dateSelection)
+        public async Task<IActionResult> Index(string name, string supplier, string beforeDate, string afterDate, string dateSelection, string catagory)
         {
             
-            IEnumerable<StockManage> stockManageList = await GetAllStock(name, supplier, beforeDate, afterDate, dateSelection);
+            IEnumerable<StockManage> stockManageList = await GetAllStock(name, supplier, beforeDate, afterDate, dateSelection, catagory);
 
             IEnumerable<Supplier> suppliers = await _cacheService.SupplierCache(CacheServiceOptionPreset.Default);
-            ViewBag.supplierList = suppliers;
 
-            SortedDictionary<string, int> stockCatagoryDistionary = new();
-            foreach(StockManage stockItem in stockManageList)
+            Dictionary<int, string> supplierDictionary = new();
+
+            foreach(Supplier _supplier in suppliers)
             {
-                if (!stockCatagoryDistionary.ContainsKey(stockItem.ProductCatagory))
+                if (!supplierDictionary.ContainsKey(_supplier.Id))
                 {
-                    stockCatagoryDistionary.Add(stockItem.ProductCatagory, stockItem.ProductID);
+                    supplierDictionary.Add(_supplier.Id, _supplier.Name);
                 }
             }
-            ViewBag.catagoryList = stockCatagoryDistionary;
-            
+            ViewBag.supplierList = supplierDictionary;
 
             return View(stockManageList);
         }
 
-        public async Task<IEnumerable<StockManage>> GetAllStock(string name, string supplier, string beforeDate, string afterDate, string dateSelection)
+        public async Task<IEnumerable<StockManage>> GetAllStock(string name, string supplier, string beforeDate, string afterDate, string dateSelection, string catagory)
         {
             ViewData["NameFilter"] = name;
             ViewData["SupplierFilter"] = supplier;
             ViewData["BeforeDateFilter"] = beforeDate;
             ViewData["AfterDateFilter"] = afterDate;
             ViewData["DateSelection"] = dateSelection;
+            ViewData["CatagoryFilter"] = catagory;
 
             Console.WriteLine(beforeDate);
 
@@ -73,6 +73,16 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
                 DateUpdated = stock.DateUpdated,
             }
          ).ToArrayAsync();
+
+            SortedDictionary<string, int> stockCatagoryDistionary = new();
+            foreach (StockManage stockItem in stockManageList)
+            {
+                if (!stockCatagoryDistionary.ContainsKey(stockItem.ProductCatagory))
+                {
+                    stockCatagoryDistionary.Add(stockItem.ProductCatagory, stockItem.ProductID);
+                }
+            }
+            ViewBag.catagoryList = stockCatagoryDistionary;
 
             if (!String.IsNullOrEmpty(name))
             {
@@ -106,11 +116,16 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
                 stockManageList = stockManageList.Where(s => s.DateUpdated > Convert.ToDateTime(afterDate));
             }
 
+            if (!String.IsNullOrEmpty(catagory))
+            {
+                stockManageList = stockManageList.Where(s => s.ProductCatagory == catagory);
+            }
+
             return stockManageList;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Export(string name, string supplier, string beforeDate, string afterDate, string dateSelection)
+        public async Task<IActionResult> Export(string name, string supplier, string beforeDate, string afterDate, string dateSelection, string catagory)
         {
             // Tutorial demonstrates clear way to export files to client.
             // However exports are determinstic on search params,
@@ -120,8 +135,9 @@ namespace Stock_Manager_With_Search_Functionality.Controllers
             ViewData["SupplierFilter"] = supplier;
             ViewData["BeforeDateFilter"] = beforeDate;
             ViewData["AfterDateFilter"] = afterDate;
+            ViewData["CatagoryFilter"] = catagory;
 
-            IEnumerable<StockManage> stocks = await GetAllStock(name, supplier, beforeDate, afterDate, dateSelection);
+            IEnumerable<StockManage> stocks = await GetAllStock(name, supplier, beforeDate, afterDate, dateSelection, catagory);
             StringBuilder stringBuilder = new();
             PropertyInfo[] propInfos = new StockManage().GetType().GetProperties();
 
