@@ -17,10 +17,10 @@ namespace Chat_and_Mail_Services.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class ResendEmailConfirmationModel : PageModel
     {
-        private readonly UserManager<Chat_and_Mail_ServicesUser> _userManager;
+        private readonly UserManager<ServicesUser> _userManager;
         private readonly IEmailSender _emailSender;
 
-        public ResendEmailConfirmationModel(UserManager<Chat_and_Mail_ServicesUser> userManager, IEmailSender emailSender)
+        public ResendEmailConfirmationModel(UserManager<ServicesUser> userManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _emailSender = emailSender;

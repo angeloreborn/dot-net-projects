@@ -15,9 +15,9 @@ namespace Chat_and_Mail_Services.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class ConfirmEmailModel : PageModel
     {
-        private readonly UserManager<Chat_and_Mail_ServicesUser> _userManager;
+        private readonly UserManager<ServicesUser> _userManager;
 
-        public ConfirmEmailModel(UserManager<Chat_and_Mail_ServicesUser> userManager)
+        public ConfirmEmailModel(UserManager<ServicesUser> userManager)
         {
             _userManager = userManager;
         }

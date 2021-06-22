@@ -16,12 +16,12 @@ namespace Chat_and_Mail_Services.Areas.Identity
         public void Configure(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) => {
-                services.AddDbContext<IdentityContext>(options =>
+                services.AddDbContext<Identity_Context>(options =>
                     options.UseSqlServer(
-                        context.Configuration.GetConnectionString("IdentityContextConnection")));
+                        context.Configuration.GetConnectionString("Identity_ContextConnection")));
 
-                services.AddDefaultIdentity<Chat_and_Mail_ServicesUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                    .AddEntityFrameworkStores<IdentityContext>();
+                services.AddDefaultIdentity<ServicesUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                    .AddEntityFrameworkStores<Identity_Context>();
             });
         }
     }

@@ -12,12 +12,12 @@ namespace Chat_and_Mail_Services.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {
-        private readonly UserManager<Chat_and_Mail_ServicesUser> _userManager;
-        private readonly SignInManager<Chat_and_Mail_ServicesUser> _signInManager;
+        private readonly UserManager<ServicesUser> _userManager;
+        private readonly SignInManager<ServicesUser> _signInManager;
 
         public IndexModel(
-            UserManager<Chat_and_Mail_ServicesUser> userManager,
-            SignInManager<Chat_and_Mail_ServicesUser> signInManager)
+            UserManager<ServicesUser> userManager,
+            SignInManager<ServicesUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -38,7 +38,7 @@ namespace Chat_and_Mail_Services.Areas.Identity.Pages.Account.Manage
             public string PhoneNumber { get; set; }
         }
 
-        private async Task LoadAsync(Chat_and_Mail_ServicesUser user)
+        private async Task LoadAsync(ServicesUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);

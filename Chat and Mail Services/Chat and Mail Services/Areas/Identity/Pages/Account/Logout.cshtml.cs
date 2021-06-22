@@ -14,10 +14,10 @@ namespace Chat_and_Mail_Services.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LogoutModel : PageModel
     {
-        private readonly SignInManager<Chat_and_Mail_ServicesUser> _signInManager;
+        private readonly SignInManager<ServicesUser> _signInManager;
         private readonly ILogger<LogoutModel> _logger;
 
-        public LogoutModel(SignInManager<Chat_and_Mail_ServicesUser> signInManager, ILogger<LogoutModel> logger)
+        public LogoutModel(SignInManager<ServicesUser> signInManager, ILogger<LogoutModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;

@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chat_and_Mail_Services.Data
 {
-    public class IdentityContext : IdentityDbContext<Chat_and_Mail_ServicesUser>
+    public class Identity_Context : IdentityDbContext<ServicesUser>
     {
-        public IdentityContext(DbContextOptions<IdentityContext> options)
+        public Identity_Context(DbContextOptions<Identity_Context> options)
             : base(options)
         {
         }

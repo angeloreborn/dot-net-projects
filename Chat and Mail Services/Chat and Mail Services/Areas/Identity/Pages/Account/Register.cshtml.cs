@@ -20,14 +20,14 @@ namespace Chat_and_Mail_Services.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<Chat_and_Mail_ServicesUser> _signInManager;
-        private readonly UserManager<Chat_and_Mail_ServicesUser> _userManager;
+        private readonly SignInManager<ServicesUser> _signInManager;
+        private readonly UserManager<ServicesUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
-            UserManager<Chat_and_Mail_ServicesUser> userManager,
-            SignInManager<Chat_and_Mail_ServicesUser> signInManager,
+            UserManager<ServicesUser> userManager,
+            SignInManager<ServicesUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
@@ -75,7 +75,7 @@ namespace Chat_and_Mail_Services.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new Chat_and_Mail_ServicesUser { UserName = Input.Email, Email = Input.Email };
+                var user = new ServicesUser { UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

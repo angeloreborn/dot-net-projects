@@ -18,13 +18,13 @@ namespace Chat_and_Mail_Services.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        private readonly UserManager<Chat_and_Mail_ServicesUser> _userManager;
-        private readonly SignInManager<Chat_and_Mail_ServicesUser> _signInManager;
+        private readonly UserManager<ServicesUser> _userManager;
+        private readonly SignInManager<ServicesUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<Chat_and_Mail_ServicesUser> signInManager, 
+        public LoginModel(SignInManager<ServicesUser> signInManager, 
             ILogger<LoginModel> logger,
-            UserManager<Chat_and_Mail_ServicesUser> userManager)
+            UserManager<ServicesUser> userManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

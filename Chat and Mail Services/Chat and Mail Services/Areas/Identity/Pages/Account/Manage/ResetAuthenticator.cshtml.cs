@@ -12,13 +12,13 @@ namespace Chat_and_Mail_Services.Areas.Identity.Pages.Account.Manage
 {
     public class ResetAuthenticatorModel : PageModel
     {
-        UserManager<Chat_and_Mail_ServicesUser> _userManager;
-        private readonly SignInManager<Chat_and_Mail_ServicesUser> _signInManager;
+        UserManager<ServicesUser> _userManager;
+        private readonly SignInManager<ServicesUser> _signInManager;
         ILogger<ResetAuthenticatorModel> _logger;
 
         public ResetAuthenticatorModel(
-            UserManager<Chat_and_Mail_ServicesUser> userManager,
-            SignInManager<Chat_and_Mail_ServicesUser> signInManager,
+            UserManager<ServicesUser> userManager,
+            SignInManager<ServicesUser> signInManager,
             ILogger<ResetAuthenticatorModel> logger)
         {
             _userManager = userManager;

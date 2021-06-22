@@ -9,11 +9,11 @@ namespace Chat_and_Mail_Services.Areas.Identity.Pages.Account.Manage
 {
     public class PersonalDataModel : PageModel
     {
-        private readonly UserManager<Chat_and_Mail_ServicesUser> _userManager;
+        private readonly UserManager<ServicesUser> _userManager;
         private readonly ILogger<PersonalDataModel> _logger;
 
         public PersonalDataModel(
-            UserManager<Chat_and_Mail_ServicesUser> userManager,
+            UserManager<ServicesUser> userManager,
             ILogger<PersonalDataModel> logger)
         {
             _userManager = userManager;

@@ -12,12 +12,12 @@ namespace Chat_and_Mail_Services.Areas.Identity.Pages.Account.Manage
 {
     public class SetPasswordModel : PageModel
     {
-        private readonly UserManager<Chat_and_Mail_ServicesUser> _userManager;
-        private readonly SignInManager<Chat_and_Mail_ServicesUser> _signInManager;
+        private readonly UserManager<ServicesUser> _userManager;
+        private readonly SignInManager<ServicesUser> _signInManager;
 
         public SetPasswordModel(
-            UserManager<Chat_and_Mail_ServicesUser> userManager,
-            SignInManager<Chat_and_Mail_ServicesUser> signInManager)
+            UserManager<ServicesUser> userManager,
+            SignInManager<ServicesUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

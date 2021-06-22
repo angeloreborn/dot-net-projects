@@ -12,13 +12,13 @@ namespace Chat_and_Mail_Services.Areas.Identity.Pages.Account.Manage
 {
     public class ChangePasswordModel : PageModel
     {
-        private readonly UserManager<Chat_and_Mail_ServicesUser> _userManager;
-        private readonly SignInManager<Chat_and_Mail_ServicesUser> _signInManager;
+        private readonly UserManager<ServicesUser> _userManager;
+        private readonly SignInManager<ServicesUser> _signInManager;
         private readonly ILogger<ChangePasswordModel> _logger;
 
         public ChangePasswordModel(
-            UserManager<Chat_and_Mail_ServicesUser> userManager,
-            SignInManager<Chat_and_Mail_ServicesUser> signInManager,
+            UserManager<ServicesUser> userManager,
+            SignInManager<ServicesUser> signInManager,
             ILogger<ChangePasswordModel> logger)
         {
             _userManager = userManager;

@@ -1,4 +1,4 @@
-﻿@inject SignInManager<Chat_and_Mail_ServicesUser> SignInManager
+﻿@inject SignInManager<ServicesUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }

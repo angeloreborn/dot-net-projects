@@ -12,11 +12,11 @@ namespace Chat_and_Mail_Services.Areas.Identity.Pages.Account.Manage
 {
     public class Disable2faModel : PageModel
     {
-        private readonly UserManager<Chat_and_Mail_ServicesUser> _userManager;
+        private readonly UserManager<ServicesUser> _userManager;
         private readonly ILogger<Disable2faModel> _logger;
 
         public Disable2faModel(
-            UserManager<Chat_and_Mail_ServicesUser> userManager,
+            UserManager<ServicesUser> userManager,
             ILogger<Disable2faModel> logger)
         {
             _userManager = userManager;

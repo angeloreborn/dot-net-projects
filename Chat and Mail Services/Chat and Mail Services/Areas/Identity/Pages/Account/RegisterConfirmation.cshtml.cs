@@ -13,10 +13,10 @@ namespace Chat_and_Mail_Services.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterConfirmationModel : PageModel
     {
-        private readonly UserManager<Chat_and_Mail_ServicesUser> _userManager;
+        private readonly UserManager<ServicesUser> _userManager;
         private readonly IEmailSender _sender;
 
-        public RegisterConfirmationModel(UserManager<Chat_and_Mail_ServicesUser> userManager, IEmailSender sender)
+        public RegisterConfirmationModel(UserManager<ServicesUser> userManager, IEmailSender sender)
         {
             _userManager = userManager;
             _sender = sender;
