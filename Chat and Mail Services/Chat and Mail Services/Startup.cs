@@ -12,7 +12,7 @@ using static Chat_and_Mail_Services.Middlewares.GlobalChatMiddleware;
 
 namespace Chat_and_Mail_Services
 {
-    public class Startup
+    public class Startup : IdentityUser
     {
         public Startup(IConfiguration configuration)
         {
@@ -26,13 +26,12 @@ namespace Chat_and_Mail_Services
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                   Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
-
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
-          
+
+            //services.AddIdentity<User, IdentityRole>()
+               //  .AddEntityFrameworkStores<FirstAppDemoDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
