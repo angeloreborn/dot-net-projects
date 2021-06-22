@@ -1,0 +1,45 @@
+﻿<h1>Global Chat</h1>
+
+<input id="messageInput" />
+<button onclick="sendMessage()">Send</button>
+<section id="messageArea">
+</section>
+@section scripts{
+    <script>
+
+    var socket;
+    (function connect() {
+        let connectionURL = 'wss://localhost:5001/GlobalChats';
+
+        socket = new WebSocket(connectionURL);
+        let messageArea = document.getElementById('messageArea');
+        socket.onmessage = (message) => {
+            console.log('Message');
+            let messageBox = document.createElement('div');
+            messageBox.innerHTML = `<div>
+                <small>@User.Identity.Name</small>
+                   <div>${message.data}</div>
+                </div>`
+            messageBox.className='message'
+            messageArea.appendChild(messageBox)
+            console.log(message);
+        }
+        console.log(socket);
+        socket.onopen = (e) => {
+            console.log(e);
+        }
+
+        socket.onerror = (e) => {
+            console.log(e);
+        }
+    })()
+
+
+    function sendMessage() {
+        let messageInput = document.getElementById('messageInput');
+        console.log('message input = ' + messageInput.value);
+        socket.send(messageInput.value);
+    }
+
+    </script>
+}

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Chat_and_Mail_Services.Models;
 
 namespace Chat_and_Mail_Services.Data
 {
@@ -12,5 +13,6 @@ namespace Chat_and_Mail_Services.Data
             : base(options)
         {
         }
+        public DbSet<Chat_and_Mail_Services.Models.GlobalChat> GlobalChat { get; set; }
     }
 }

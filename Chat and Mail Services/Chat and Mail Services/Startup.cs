@@ -1,17 +1,14 @@
 using Chat_and_Mail_Services.Data;
+using Chat_and_Mail_Services.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using static Chat_and_Mail_Services.Middlewares.GlobalChatMiddleware;
 
 namespace Chat_and_Mail_Services
 {
@@ -35,6 +32,7 @@ namespace Chat_and_Mail_Services
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+          
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,13 +49,22 @@ namespace Chat_and_Mail_Services
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseWebSockets();
+            app.UseGlobalChat(new GlobalChatOptions
+            {
+                AccessRoutes = new List<string>()
+                {
+                    "/GlobalChats"
+                }
+            });
 
             app.UseEndpoints(endpoints =>
             {
@@ -66,6 +73,6 @@ namespace Chat_and_Mail_Services
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
-        }
+        }    
     }
 }
