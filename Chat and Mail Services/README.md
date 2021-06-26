@@ -29,4 +29,4 @@ Allows input of text, formatted in bold, italic, underline.
 
 ## Multi User
 Multiple users can communicate in global chat, each live client connection will recieve a message broadcast.
-![alt text](./TEXT_FORMAT.png)
+![alt text](./MULT_USER.png)
