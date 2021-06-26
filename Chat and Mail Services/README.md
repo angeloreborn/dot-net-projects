@@ -26,4 +26,4 @@ Prebuilt integrations will allow certain features to be embedded into the chat t
 ## Text formatting
 Allows input of text, formatted in bold, italic, underline.
 
-[Text formatting in global chat](./TEXT_FORMAT.png)
+![alt text](./TEXT_FORMAT.png)
