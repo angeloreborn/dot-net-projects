@@ -25,5 +25,8 @@ Prebuilt integrations will allow certain features to be embedded into the chat t
 
 ## Text formatting
 Allows input of text, formatted in bold, italic, underline.
+![alt text](./TEXT_FORMAT.png)
 
+## Multi User
+Multiple users can communicate in global chat, each live client connection will recieve a message broadcast.
 ![alt text](./TEXT_FORMAT.png)
