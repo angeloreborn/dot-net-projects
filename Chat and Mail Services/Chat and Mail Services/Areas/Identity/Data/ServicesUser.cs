@@ -9,5 +9,6 @@ namespace Chat_and_Mail_Services.Areas.Identity.Data
     // Add profile data for application users by adding properties to the ServicesUser class
     public class ServicesUser : IdentityUser
     {
+        public Guid ProfilePhotoUid { get; set; }
     }
 }

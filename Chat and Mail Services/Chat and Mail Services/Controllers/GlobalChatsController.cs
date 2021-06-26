@@ -21,7 +21,7 @@ namespace Chat_and_Mail_Services.Controllers
         {
             _context = context;
         }
-
+        
 
 
         // GET: GlobalChats

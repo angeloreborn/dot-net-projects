@@ -1,3 +1,4 @@
+
 using Chat_and_Mail_Services.Data;
 using Chat_and_Mail_Services.Middlewares;
 using Microsoft.AspNetCore.Builder;
@@ -8,6 +9,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+
+
+
 using static Chat_and_Mail_Services.Middlewares.GlobalChatMiddleware;
 
 namespace Chat_and_Mail_Services
@@ -29,6 +34,8 @@ namespace Chat_and_Mail_Services
                    Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
 

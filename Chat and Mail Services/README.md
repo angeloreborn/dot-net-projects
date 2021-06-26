@@ -1,24 +1,29 @@
 ﻿# Project Description
-This project includes data management for stock. There are `3 entites` explored here:
-- Supplier
-- Product
-- Stock
+This project contains chat and mail services
+- Global Chat
+- Grouped Chat
+- Batch mailing
+- Mail/Newsletter subscriptions 
+- Dashboards for managing services
 
-`Supplier` is modelled towards general information.
+# Global Chat
+## Description 
+Global chat is dedicated chat open to all account users. It will contain the basic features of a chat application
+- Text communication
+- Emoji Integration
+- Media Uploads
+    - Audio (HTML5 audio formats)
+    - Video (HTML5 video formats)
+    - Image (png, gif, jpg, tiff)
+- Prebuilt integrations
+    - HTML markup and css integrated layouts
+    - Markups linked with injected scripts
 
-`Product` is modelled towards product details
+Prebuilt integrations will allow certain features to be embedded into the chat that will create a rich dynamic experience and provice rhobust tools to aide in communication, some features pending are:
+- Integrated realtime voting system
+- Feedback + Q/A scripts for internalized functionality or support services
 
-`Stock` is modelled towards tracking product quantity
+## Text formatting
+Allows input of text, formatted in bold, italic, underline.
 
-# Areas Covered
-## Core Focus
-- Entity Framework Core
-- Service Injection
-
-## Detailed Focus
-- Pagination
-- Data Caching
-- Data Seeding
-- Data Sorting (Server & Client)
-- Data Filtering
-
+[Text formatting in global chat](./TEXT_FORMAT.png)
